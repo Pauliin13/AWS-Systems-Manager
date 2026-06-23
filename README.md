@@ -1,230 +1,289 @@
-# AWS-Systems-Manager
-Visão Geral
+# 🚀 AWS Systems Manager Lab – Centralized EC2 Management Without SSH
 
-Neste laboratório foi utilizado o AWS Systems Manager para gerenciar uma instância Amazon EC2 de forma centralizada e segura, sem necessidade de acesso SSH tradicional.
+![AWS](https://img.shields.io/badge/AWS-Systems%20Manager-orange)
+![EC2](https://img.shields.io/badge/Amazon-EC2-yellow)
+![Session Manager](https://img.shields.io/badge/Session-Manager-blue)
+![Parameter Store](https://img.shields.io/badge/Parameter-Store-green)
+![Automation](https://img.shields.io/badge/Infrastructure-Automation-red)
 
-O laboratório demonstrou como utilizar recursos do Systems Manager para:
+## 📖 Project Overview
 
-Inventário de servidores
-Execução remota de comandos
-Gerenciamento de parâmetros
-Acesso remoto seguro utilizando Session Manager
+This project demonstrates how to manage Amazon EC2 instances securely and centrally using AWS Systems Manager without relying on traditional SSH access.
 
-O objetivo principal foi compreender como empresas administram ambientes Cloud em escala utilizando automação e gerenciamento centralizado.
+The lab explores several Systems Manager capabilities including inventory collection, remote command execution, configuration management, and secure browser-based access to Linux instances.
 
-Objetivos do Laboratório
+This approach reflects modern operational practices used in Cloud Computing and DevOps environments.
 
-Ao final deste laboratório foi possível:
+---
 
-Verificar configurações e permissões das instâncias
-Executar comandos remotamente utilizando Run Command
-Gerenciar parâmetros e configurações de aplicações
-Acessar instâncias EC2 sem SSH utilizando Session Manager
-Trabalhar com inventário automatizado de servidores
-Tecnologias e Serviços Utilizados
-Serviço	Descrição
-AWS Systems Manager	Gerenciamento centralizado de infraestrutura
-Amazon EC2	Instância virtual na AWS
-Fleet Manager	Inventário e gerenciamento de servidores
-Run Command	Execução remota de comandos
-Parameter Store	Armazenamento de parâmetros e configurações
-Session Manager	Acesso remoto seguro sem SSH
-IAM	Controle de acesso e permissões
-AWS CLI	Interface de linha de comando da AWS
-Arquitetura do Laboratório
+# 🎯 Objectives
 
-O ambiente consistia em:
+* Manage EC2 instances centrally
+* Collect inventory information automatically
+* Execute commands remotely using Run Command
+* Store application configurations using Parameter Store
+* Access EC2 instances securely with Session Manager
+* Eliminate SSH dependency
+* Improve operational security and scalability
 
-Uma instância Amazon EC2 gerenciada
-Systems Manager Agent instalado
-Gerenciamento centralizado pelo AWS Systems Manager
-Aplicação web instalada remotamente
-Acesso via Session Manager sem necessidade de SSH
+---
 
-Fluxo do laboratório:
+# 🏗 Solution Architecture
 
-Usuário → AWS Systems Manager → Managed EC2 Instance
+```text
+                          Administrator
+                                 │
+                                 ▼
+                    AWS Systems Manager
+                                 │
+        ┌──────────────┬───────────────┬───────────────┐
+        │              │               │
+        ▼              ▼               ▼
+  Fleet Manager    Run Command    Parameter Store
+        │              │               │
+        └──────────────┴───────────────┘
+                         │
+                         ▼
+                 Managed EC2 Instance
+                         │
+                         ▼
+                  Session Manager
+                         │
+                         ▼
+                    Linux Shell
+```
 
-Etapa 1 — Configuração de Inventory no Fleet Manager
+---
 
-Nesta etapa foi utilizado o recurso Fleet Manager para coletar informações da instância EC2.
+# ⚙️ AWS Services Used
 
-Procedimentos realizados
+| Service             | Purpose                               |
+| ------------------- | ------------------------------------- |
+| AWS Systems Manager | Centralized infrastructure management |
+| Amazon EC2          | Managed server                        |
+| Fleet Manager       | Inventory and server management       |
+| Run Command         | Remote command execution              |
+| Parameter Store     | Configuration management              |
+| Session Manager     | Secure access without SSH             |
+| IAM                 | Permissions and access control        |
+| AWS CLI             | Administrative commands               |
 
-Acesso ao:
+---
 
-Systems Manager
-→ Fleet Manager
-→ Set up inventory
+# 🛠 Implementation Steps
 
-Configuração criada:
+---
 
-Campo	Valor
-Name	Inventory-Association
-Target	Managed Instance
-Objetivo do Inventory
+# Step 1 - Configure Inventory Using Fleet Manager
 
-O recurso Inventory realiza coleta automática de:
+Fleet Manager was configured to collect information from the managed EC2 instance.
 
-Aplicações instaladas
-Pacotes
-Configurações
-Metadados
-Informações do sistema operacional
-Resultado
+### Configuration
 
-Foi possível visualizar:
+| Parameter        | Value                 |
+| ---------------- | --------------------- |
+| Association Name | Inventory-Association |
+| Target           | Managed Instance      |
 
-Softwares instalados
-Dados do sistema
-Configurações da instância
+### Information Collected
 
-Tudo sem necessidade de acesso SSH.
+* Installed applications
+* Operating system details
+* Packages
+* System metadata
+* Configuration information
 
-Etapa 2 — Instalação de aplicação utilizando Run Command
+### Result
 
-Nesta etapa foi utilizado o recurso Run Command para instalar automaticamente uma aplicação web em uma instância EC2.
+Inventory data became available without requiring SSH access.
 
-O que foi instalado
+---
 
-O documento executado realizou automaticamente:
+# Step 2 - Deploy Application Using Run Command
 
-Instalação do Apache Web Server
-Instalação do PHP
-Instalação do AWS SDK
-Deploy da aplicação Widget Manufacturing Dashboard
-Procedimentos realizados
+Run Command was used to install and configure a web application remotely.
 
-Acesso ao:
+### Document Executed
 
-Systems Manager
-→ Run Command
-→ Run command
-
-Documento utilizado:
-
+```text
 Install Dashboard App
+```
 
-Target configurado:
+### Tasks Performed
 
-Managed Instance
-Resultado
+* Install Apache Web Server
+* Install PHP
+* Install AWS SDK
+* Deploy Widget Manufacturing Dashboard
 
-Após a execução do comando:
+### Result
 
-O servidor web foi iniciado
-A aplicação web foi instalada automaticamente
-O dashboard ficou acessível via navegador
-Conceito aprendido
+The application was installed automatically and became accessible through a browser.
 
-O Run Command permite automação de tarefas administrativas em múltiplas instâncias simultaneamente sem necessidade de acesso manual aos servidores.
+---
 
-Etapa 3 — Gerenciamento de parâmetros com Parameter Store
+# Step 3 - Manage Configuration with Parameter Store
 
-Nesta etapa foi utilizado o Parameter Store para controlar funcionalidades da aplicação.
+A parameter was created to enable beta features in the application.
 
-Configuração criada
-Campo	Valor
-Name	/dashboard/show-beta-features
-Type	String
-Value	True
-Objetivo
+### Configuration
 
-A aplicação consultava automaticamente o parâmetro criado no Systems Manager.
+| Parameter | Value                         |
+| --------- | ----------------------------- |
+| Name      | /dashboard/show-beta-features |
+| Type      | String                        |
+| Value     | True                          |
 
-Quando o parâmetro existia:
+### Purpose
 
-Recursos beta eram habilitados
-Novos gráficos eram exibidos no dashboard
-Conceito aprendido
+The application dynamically retrieved this parameter to enable additional dashboard functionality.
 
-O Parameter Store permite gerenciamento centralizado de:
+### Benefits
 
-Configurações
-Variáveis
-Segredos
-Tokens
-Strings de conexão
+* Centralized configuration
+* No application code changes required
+* Improved maintainability
 
-Sem necessidade de alterar diretamente o código da aplicação.
+---
 
-Etapa 4 — Acesso remoto com Session Manager
+# Step 4 - Access EC2 Without SSH Using Session Manager
 
-Nesta etapa foi utilizado o Session Manager para acessar a instância EC2 sem SSH.
+Session Manager provided browser-based access to the Linux instance.
 
-Procedimentos realizados
+### Commands Executed
 
-Acesso ao:
+List application files:
 
-Systems Manager
-→ Session Manager
-→ Start session
-
-Instância utilizada:
-
-Managed Instance
-Comandos executados
-Listagem dos arquivos da aplicação
+```bash
 ls /var/www/html
-Consulta de região AWS
+```
+
+Retrieve Availability Zone:
+
+```bash
 AZ=`curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone`
 export AWS_DEFAULT_REGION=${AZ::-1}
-Consulta das instâncias EC2
+```
+
+Describe EC2 instances:
+
+```bash
 aws ec2 describe-instances
-Resultado
+```
 
-Foi possível:
+### Result
 
-Acessar o shell Linux diretamente pelo navegador
-Executar comandos administrativos
-Consultar informações EC2 via AWS CLI
-Trabalhar sem abrir portas SSH
-Conceitos Técnicos Aprendidos
-Conceito	Descrição
-Systems Manager	Gerenciamento centralizado AWS
-Fleet Manager	Inventário e administração de instâncias
-Run Command	Execução remota de comandos
-Parameter Store	Armazenamento de parâmetros
-Session Manager	Acesso remoto sem SSH
-Managed Instance	Instância registrada no Systems Manager
-SSM Agent	Agente de comunicação do Systems Manager
-IAM	Controle de acesso e permissões
-Benefícios do AWS Systems Manager
+Secure shell access was achieved without:
 
-O laboratório demonstrou diversas vantagens do Systems Manager:
+* SSH keys
+* Port 22 exposure
+* Bastion hosts
 
-Maior segurança
-Eliminação da necessidade de SSH
-Gerenciamento centralizado
-Automação de tarefas
-Auditoria via CloudTrail
-Escalabilidade operacional
-Administração em larga escala
-Aprendizados do Laboratório
+---
 
-Este laboratório demonstrou como administrar infraestrutura AWS de maneira moderna utilizando automação e gerenciamento centralizado.
+# 🔐 Security Benefits
 
-Os principais aprendizados envolveram:
+* No inbound SSH ports required
+* Reduced attack surface
+* Centralized access management
+* IAM-based authentication
+* CloudTrail auditing support
 
-Automação de administração de servidores
-Execução remota de tarefas
-Gerenciamento de configurações
-Segurança operacional
-Administração sem SSH
-Utilização prática do Systems Manager
-Conclusão
+---
 
-Ao concluir este laboratório, foi possível compreender como o AWS Systems Manager simplifica o gerenciamento de infraestrutura Cloud por meio de automação, segurança e administração centralizada.
+# 📚 Concepts Demonstrated
 
-O uso de recursos como Fleet Manager, Run Command, Parameter Store e Session Manager demonstra práticas amplamente utilizadas em ambientes corporativos modernos de Cloud Computing e DevOps.
+| Concept          | Description                           |
+| ---------------- | ------------------------------------- |
+| Systems Manager  | Centralized infrastructure management |
+| Fleet Manager    | Inventory and server administration   |
+| Run Command      | Remote execution                      |
+| Parameter Store  | Configuration storage                 |
+| Session Manager  | Browser-based access                  |
+| Managed Instance | SSM-enabled EC2                       |
+| SSM Agent        | Communication agent                   |
+| IAM              | Permissions and authentication        |
 
-Autor
+---
 
-Paulo Henrique Pereira Dos Santos
+# 📊 Benefits of AWS Systems Manager
 
-Referências
-Documentação oficial AWS Systems Manager
-AWS Skill Builder
-Documentação Amazon EC2
-Documentação IAM
-AWS CLI Documentation
+✅ Improved security
+
+✅ Elimination of SSH access
+
+✅ Centralized administration
+
+✅ Operational automation
+
+✅ Scalable management
+
+✅ Auditability with CloudTrail
+
+✅ Reduced operational complexity
+
+---
+
+# 🎓 Learning Outcomes
+
+This project provided hands-on experience with:
+
+* Infrastructure automation
+* Server administration without SSH
+* Configuration management
+* Remote command execution
+* AWS CLI operations
+* Secure access to EC2 instances
+* Centralized infrastructure management
+
+---
+
+# 📂 Repository Structure
+
+```text
+aws-systems-manager-lab
+│
+├── README.md
+├── images
+│     ├── architecture.png
+│     ├── fleet-manager.png
+│     ├── run-command.png
+│     ├── parameter-store.png
+│     ├── session-manager.png
+│     └── dashboard-app.png
+│
+├── scripts
+│     ├── install-dashboard.sh
+│     └── aws-cli-commands.sh
+│
+└── docs
+      └── lab-notes.md
+```
+
+---
+
+# 📚 Skills Demonstrated
+
+* AWS Systems Manager
+* Fleet Manager
+* Session Manager
+* Run Command
+* Parameter Store
+* Linux Administration
+* AWS CLI
+* IAM
+* Infrastructure Automation
+* Cloud Operations
+* DevOps Fundamentals
+
+---
+
+# 📌 Author
+
+**Paulo Henrique
+
+AWS Cloud Practitioner Candidate | Cloud Computing Enthusiast
+
+---
+
+## ⭐ If you found this project useful, feel free to star the repository.
